@@ -2,6 +2,8 @@ const express = require('express');
 const dotenv = require('dotenv');
 const connectDB = require('./config/db');
 const cors = require('cors');
+const authRoutes = require('./routes/authRoutes');
+//const todoRoutes = require('./routes/toDoRoutes');
 
 dotenv.config();
 connectDB();
@@ -13,10 +15,7 @@ app.use(express.json());
 // app.use('/api/auth', require('./routes/authRoutes'));
 // app.use('/api/todos', require('./routes/todoRoutes'));
 
-const authRoutes = require('./routes/authRoutes');
-const todoRoutes = require('./routes/todoRoutes');
-
-app.use('/api/todos', todoRoutes);
+//app.use('/api/todos', todoRoutes);
 app.use('/api/auth', authRoutes);
 
 const PORT = process.env.PORT || 5000;
