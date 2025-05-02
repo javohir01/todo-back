@@ -3,7 +3,7 @@ const dotenv = require('dotenv');
 const connectDB = require('./config/db');
 const cors = require('cors');
 const authRoutes = require('./routes/authRoutes');
-//const todoRoutes = require('./routes/toDoRoutes');
+const taskRoutes = require('./routes/taskRoutes');
 
 dotenv.config();
 connectDB();
@@ -20,9 +20,8 @@ const corsOptions = {
 app.use(cors());
 app.use(express.json());
 
-const authRoutes = require('./routes/authRoutes');
-
 app.use('/api/auth', authRoutes);
+app.use('/api/task', taskRoutes);
 
 app.get('/', (req, res) => {
   res.send('Hello, world!');
