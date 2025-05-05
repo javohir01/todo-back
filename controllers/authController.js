@@ -20,20 +20,22 @@ exports.register = async (req, res) => {
   }
 };
 
-exports.login = async (req, res) => {
-  const { username, password } = req.body;
+exports.me = async (req, res) => {
+  const token = req.header('x-auth-token');
+
+  // Check if no token
+  if (!token) {
+    return res.status(401).json({ msg: 'No token, authorization denied' });
+  }
+
   try {
-    let user = await User.findOne({ username });
-    if (!user) return res.status(400).json({ msg: 'Invalid credentials' });
-
-    const isMatch = await bcrypt.compare(password, user.password);
-    if (!isMatch) return res.status(400).json({ msg: 'Invalid credentials' });
-
-    const payload = { user: { id: user.id } };
-    const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '1h' });
-
-    res.json({ token });
+    // Verify token
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    
+    // Add user from payload
+    req.user = decoded.user;
+    next();
   } catch (err) {
-    res.status(500).send('Server error');
+    res.status(401).json({ msg: 'Token is not valid' });
   }
 };
